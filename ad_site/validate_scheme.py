@@ -36,8 +36,10 @@ class PatchUser(pydantic.BaseModel):
 
 class CreateAd(pydantic.BaseModel):   # валидация рекламы
 
-    # header: str
+    header: str
     user_id: int
+
+    description: Optional[str] = None
 
     @pydantic.field_validator('user_id')
     def validate_password(cls, value):
