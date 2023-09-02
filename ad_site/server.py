@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 
+from ads import AdView
 from security import HttpError
 from users import UserView
 
@@ -21,6 +22,15 @@ app.add_url_rule('/user/<int:user_id>',
                  )
 app.add_url_rule('/user/',
                  view_func=UserView.as_view('user_new'),
+                 methods=['POST']
+                 )
+
+app.add_url_rule('/ad/<int:ad_id>',
+                 view_func=AdView.as_view('ad_existed'),
+                 methods=['GET', 'DELETE']
+                 )
+app.add_url_rule('/ad/',
+                 view_func=AdView.as_view('ad_new'),
                  methods=['POST']
                  )
 

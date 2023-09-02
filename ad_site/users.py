@@ -41,21 +41,24 @@ class UserView(MethodView):
 
     def post(self):                             # ДОБАВИТЬ
         json_data = validate(request.json, CreateUser)
-        pwd: str = json_data["password"]           # извлекаем пароль (строку) для хэширования
-        json_data["password"] = hash_password(pwd) # кладем хэш (строку) обратно в json
+        # извлекаем пароль (строку) для хэширования:
+        pwd: str = json_data["password"]
+        # кладем хэш (строку) обратно в json:
+        json_data["password"] = hash_password(pwd)
 
         with Session() as session:
-            new_user = User(**json_data)    # используем символы распаковки json
+            # используем символы распаковки json:
+            new_user = User(**json_data)
             session.add(new_user)
             try:
                 session.commit()
             except IntegrityError as err:
                 raise HttpError(
                     409,
-                    'user already exists with the same username'
+                    f'user already exists with the same username   {err}'
                 )
             return jsonify({
-                "status": "add success",
+                "status": "user add success",
                 "id": new_user.id
             })
 
@@ -75,7 +78,7 @@ class UserView(MethodView):
                 raise HttpError(409, 'username is busy')
 
             return jsonify({
-                "status": "patch success",
+                "status": "user patch success",
                 "id": user.id
             })
 
@@ -87,10 +90,10 @@ class UserView(MethodView):
             # можно в модель добавить метод
             # подготовки нужного словарика для ответа
             return jsonify({
-                "status": "delete success",
+                "status": "user delete success",
                 "id": user.id,
                 "username": user.username,
                 "creation_time": user.creation_time.isoformat()
-                # "creation_time": int(user.creation_time.timestamp()) # прошло секунд
+                # прошло секунд
+                # "creation_time": int(user.creation_time.timestamp())
             })
-

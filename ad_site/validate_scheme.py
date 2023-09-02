@@ -1,5 +1,7 @@
 import pydantic     # содержит СХЕМЫ ВАЛИДАЦИИ
 
+import requests as requests
+
 from typing import Optional
 
 
@@ -30,4 +32,18 @@ class PatchUser(pydantic.BaseModel):
                                                     # и библ. pydantic его правльно обработает!
         return value                        # возвращаем уже валидированное значение
                                             # (иногда здесь хешируют пароль, но лучше делать отдельно!)
+
+
+class CreateAd(pydantic.BaseModel):   # валидация рекламы
+
+    # header: str
+    user_id: int
+
+    @pydantic.field_validator('user_id')
+    def validate_password(cls, value):
+        url = f'http://127.0.0.1:5000/user/{value}'
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ValueError('user not found...')
+        return value
 

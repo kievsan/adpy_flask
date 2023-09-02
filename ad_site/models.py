@@ -78,7 +78,7 @@ class Ad(Base):
         )
     description = Column(
         String,
-        nullable=False
+        nullable=True
         )
     creation_time = Column(
         DateTime,
@@ -86,8 +86,9 @@ class Ad(Base):
         )
     user_id = Column(
         Integer,
-        unique=True,
-        index=True
+        nullable=False
+        # unique=True,
+        # index=True
     )
 
 
