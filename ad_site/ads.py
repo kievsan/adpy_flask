@@ -56,6 +56,22 @@ class AdView(MethodView):
                 "id": new_ad.id
             })
 
+    def patch(self, ad_id: int):          # РЕДАКТИРОВАТЬ
+        json_data = validate(request.json, CreateAd)
+        with Session() as session:
+            ad = get_ad(ad_id, session)
+            for field, value in json_data.items():
+                setattr(ad, field, value)
+            try:
+                session.commit()
+            except IntegrityError as err:
+                raise HttpError(409, 'username is busy')
+
+            return jsonify({
+                "status": "advertisement patch success",
+                "id": ad.id
+            })
+
     def delete(self, ad_id: int):         # УДАЛИТЬ
         with Session() as session:
             ad = get_ad(ad_id, session)
