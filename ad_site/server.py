@@ -6,6 +6,7 @@ from users import UserView
 
 app = Flask(__name__)
 
+
 @app.errorhandler(HttpError)
 def error_handler(error: HttpError):
     # http-ответ клиенту:
@@ -15,6 +16,7 @@ def error_handler(error: HttpError):
     })
     response.status_code = error.status_code
     return response
+
 
 app.add_url_rule('/user/<int:user_id>',
                  view_func=UserView.as_view('user_existed'),
@@ -34,14 +36,16 @@ app.add_url_rule('/ad/',
                  methods=['POST']
                  )
 
+
 def hello():
     return jsonify({
         "add-site": "Hello! REST API for ad-site is working yet!"
     })
+
+
 app.add_url_rule('/',
                  view_func=hello,
-                 methods=['POST', 'GET', 'PATCH', 'DELETE'])    # CRUD
-
+                 methods=['POST', 'GET', 'PATCH', 'DELETE'])  # CRUD
 
 if __name__ == '__main__':
     app.run()
