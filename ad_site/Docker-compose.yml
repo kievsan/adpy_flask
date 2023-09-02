@@ -1,0 +1,22 @@
+version: '3.10'
+
+networks:
+  backend:
+
+services:
+
+  db:
+    image: postgres:14.3-alpine3.16
+    container_name: ad_site_db
+    environment:
+      POSTGRES_DB: ad_site_pgdb
+      POSTGRES_USER: ad_agent
+      POSTGRES_PASSWORD: agent_password
+    ports:
+      - '5431:5432'
+#      POSTGRES_DB: ${DB_NAME}
+#      POSTGRES_USER: ${DB_USER}
+#      POSTGRES_PASSWORD: ${DB_PASSWORD}
+#    ports:
+#      - '5431:${DB_PORT}'
+
