@@ -29,7 +29,7 @@ app.add_url_rule('/user/',
 
 app.add_url_rule('/ad/<int:ad_id>',
                  view_func=AdView.as_view('ad_existed'),
-                 methods=['GET', 'DELETE']
+                 methods=['GET', 'PATCH', 'DELETE']
                  )
 app.add_url_rule('/ad/',
                  view_func=AdView.as_view('ad_new'),
