@@ -4,7 +4,7 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from models import Session, Ad
-from validate_scheme import CreateAd
+from validate_scheme import CreateAd, PatchAd
 from security import HttpError
 
 from pydantic import ValidationError
@@ -12,11 +12,12 @@ from sqlalchemy.exc import IntegrityError
 
 
 def validate(json_data: dict,
-             model_class: Type[CreateAd]):
+             model_class: Type[CreateAd] | Type[PatchAd]):
     try:
         model_item = model_class(**json_data)
         return model_item.model_dump(exclude_none=True)
     except ValidationError as err:
+        print(request.json)
         raise HttpError(400, err.errors())
 
 
@@ -57,7 +58,7 @@ class AdView(MethodView):
             })
 
     def patch(self, ad_id: int):          # РЕДАКТИРОВАТЬ
-        json_data = validate(request.json, CreateAd)
+        json_data = validate(request.json, PatchAd)
         with Session() as session:
             ad = get_ad(ad_id, session)
             for field, value in json_data.items():

@@ -25,6 +25,7 @@ class CreateUser(pydantic.BaseModel):   # здесь будет валидаци
 class PatchUser(pydantic.BaseModel):
     username: Optional[str] = None          # поля опциональны
     password: Optional[str] = None          # (не обязательно все обновлять...)
+    email: Optional[str] = None
 
     @pydantic.field_validator('password')   # валидируемое поле
     def validate_password(cls, value):      # password - так можем давать название методам валидации
@@ -35,14 +36,29 @@ class PatchUser(pydantic.BaseModel):
                                             # (иногда здесь хешируют пароль, но лучше делать отдельно!)
 
 
-class CreateAd(pydantic.BaseModel):   # валидация рекламы
+class CreateAd(pydantic.BaseModel):   # валидация новой рекламы
 
     user_id: int
     header: Optional[str] = 'made ad'
     description: Optional[str] = None
 
     @pydantic.field_validator('user_id')
-    def validate_owner(cls, value):
+    def validate_ad_owner(cls, value):
+        url = f'http://localhost:5000/user/{value}'
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ValueError('user not found...')
+        return value
+
+
+class PatchAd(pydantic.BaseModel):   # валидация рекламы
+
+    user_id: Optional[int] = None
+    header: Optional[str] = None
+    description: Optional[str] = None
+
+    @pydantic.field_validator('user_id')
+    def validate_ad_owner(cls, value):
         url = f'http://localhost:5000/user/{value}'
         response = requests.get(url)
         if response.status_code != 200:
