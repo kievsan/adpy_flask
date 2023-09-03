@@ -45,13 +45,18 @@ class User(Base):
         )
     username = Column(
         String,
-        nullable=True,
+        nullable=False,
         unique=True,
         index=True
         )
     password = Column(
         String,
-        nullable=True
+        nullable=False
+        )
+    email = Column(
+        String,
+        nullable=False,
+        index=True
         )
     creation_time = Column(
         DateTime,
@@ -72,13 +77,11 @@ class Ad(Base):
         )
     header = Column(
         String,
-        nullable=True,
-        unique=True,
+        nullable=False,
         index=True
         )
     description = Column(
-        String,
-        nullable=True
+        String
         )
     creation_time = Column(
         DateTime,
@@ -87,8 +90,6 @@ class Ad(Base):
     user_id = Column(
         Integer,
         nullable=False
-        # unique=True,
-        # index=True
     )
 
 

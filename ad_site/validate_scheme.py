@@ -9,6 +9,7 @@ class CreateUser(pydantic.BaseModel):   # здесь будет валидаци
                                         # (того, что пойдет в post)
     username: str       # два обязательных поля:
     password: str       # то, что должен прислать клиент!
+    email: Optional[str] = 'missing@email'
 
     # Можно добавить валидации, напр, проверять сложность пароля
 
@@ -36,14 +37,13 @@ class PatchUser(pydantic.BaseModel):
 
 class CreateAd(pydantic.BaseModel):   # валидация рекламы
 
-    header: str
     user_id: int
-
+    header: Optional[str] = 'made ad'
     description: Optional[str] = None
 
     @pydantic.field_validator('user_id')
-    def validate_password(cls, value):
-        url = f'http://127.0.0.1:5000/user/{value}'
+    def validate_owner(cls, value):
+        url = f'http://localhost:5000/user/{value}'
         response = requests.get(url)
         if response.status_code != 200:
             raise ValueError('user not found...')

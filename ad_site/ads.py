@@ -49,7 +49,7 @@ class AdView(MethodView):
             except IntegrityError as err:
                 raise HttpError(
                     409,
-                    f'ad already exists with the same user id   {err}'
+                    f'ad already exists with the same data   {err}'
                 )
             return jsonify({
                 "status": "advertisement add success",
